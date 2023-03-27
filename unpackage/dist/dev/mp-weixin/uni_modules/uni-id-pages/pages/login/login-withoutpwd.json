@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "",
+  "usingComponents": {
+    "uni-id-pages-agreements": "/uni_modules/uni-id-pages/components/uni-id-pages-agreements/uni-id-pages-agreements",
+    "uni-easyinput": "/uni_modules/uni-easyinput/components/uni-easyinput/uni-easyinput",
+    "uni-id-pages-fab-login": "/uni_modules/uni-id-pages/components/uni-id-pages-fab-login/uni-id-pages-fab-login"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "",
+  "usingComponents": {
+    "lime-clipper": "/uni_modules/uni-id-pages/pages/userinfo/cropImage/limeClipper/limeClipper"
+  }
+}

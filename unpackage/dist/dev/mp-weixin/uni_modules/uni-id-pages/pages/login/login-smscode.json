@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "手机验证码登录",
+  "usingComponents": {
+    "uni-forms": "/uni_modules/uni-forms/components/uni-forms/uni-forms",
+    "uni-id-pages-sms-form": "/uni_modules/uni-id-pages/components/uni-id-pages-sms-form/uni-id-pages-sms-form",
+    "uni-popup-captcha": "/uni_modules/uni-captcha/components/uni-popup-captcha/uni-popup-captcha"
+  }
+}

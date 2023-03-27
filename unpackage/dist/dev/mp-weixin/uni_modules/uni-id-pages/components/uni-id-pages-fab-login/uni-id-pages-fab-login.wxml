@@ -1,0 +1,1 @@
+<view><view class="fab-login-box"><block wx:for="{{servicesList}}" wx:for-item="item" wx:for-index="index" wx:key="index"><view data-event-opts="{{[['tap',[['e0',['$event']]]]]}}" data-event-params="{{({item})}}" class="item" bindtap="__e"><image class="logo" src="{{item.logo}}" mode="scaleToFill"></image><text class="login-title">{{item.text}}</text></view></block></view></view>
