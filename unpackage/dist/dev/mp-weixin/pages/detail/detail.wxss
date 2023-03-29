@@ -82,9 +82,6 @@
 .detail .container .like .btn .iconfont {
   font-size: 50rpx;
 }
-.detail .container .like .btn.active {
-  background: #0199FE;
-}
 .detail .container .like .text {
   font-size: 26rpx;
   color: #666;
@@ -106,5 +103,8 @@
   border-radius: 50%;
   border: 3px solid #fff;
   margin-left: -20rpx;
+}
+.active {
+  background: #0199FE !important;
 }
 

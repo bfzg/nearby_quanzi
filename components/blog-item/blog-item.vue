@@ -23,7 +23,7 @@
 			</view>
 			<view class="piclist">
 				<view class="pic" v-for="(j,index) in item.picurls" :key="index">
-					<image :src="j" mode="aspectFill"></image>
+					<image @click="clickPic(index)" :src="j" mode="aspectFill"></image>
 				</view>					
 			</view>
 		</view>
@@ -59,6 +59,13 @@
 			};
 		},
 		methods:{
+			//点击查看图片
+			clickPic(index){
+				uni.previewImage({
+					urls:this.item.picurls,
+					current:index
+				})
+			},
 			//跳转到详情页
 			goDetail(){
 				uni.navigateTo({

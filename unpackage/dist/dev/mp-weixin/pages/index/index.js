@@ -102,13 +102,13 @@ var components
 try {
   components = {
     uTabs: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-tabs/u-tabs */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-tabs/u-tabs")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-tabs/u-tabs.vue */ 332))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-tabs/u-tabs */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-tabs/u-tabs")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-tabs/u-tabs.vue */ 334))
     },
     uSkeleton: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-skeleton/u-skeleton */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-skeleton/u-skeleton")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-skeleton/u-skeleton.vue */ 340))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-skeleton/u-skeleton */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-skeleton/u-skeleton")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-skeleton/u-skeleton.vue */ 342))
     },
     blogItem: function () {
-      return __webpack_require__.e(/*! import() | components/blog-item/blog-item */ "components/blog-item/blog-item").then(__webpack_require__.bind(null, /*! @/components/blog-item/blog-item.vue */ 348))
+      return __webpack_require__.e(/*! import() | components/blog-item/blog-item */ "components/blog-item/blog-item").then(__webpack_require__.bind(null, /*! @/components/blog-item/blog-item.vue */ 350))
     },
   }
 } catch (e) {
@@ -227,7 +227,6 @@ var _default = {
       var artTemp = db.collection("quanzi_article").field("title,user_id,description,picurls,comment_count,like_count,view_count,publish_date").getTemp();
       var userTemp = db.collection("uni-id-users").field("_id,username,nickname,avatar_file").getTemp();
       db.collection(artTemp, userTemp).get().then(function (res) {
-        console.log(res);
         _this.dataList = res.result.data;
       });
     },

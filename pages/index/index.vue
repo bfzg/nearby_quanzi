@@ -55,7 +55,6 @@
 				let artTemp=db.collection("quanzi_article").field("title,user_id,description,picurls,comment_count,like_count,view_count,publish_date").getTemp();
 				let userTemp = db.collection("uni-id-users").field("_id,username,nickname,avatar_file").getTemp();
 				db.collection(artTemp,userTemp).get().then(res=>{
-					console.log(res);
 					this.dataList = res.result.data;
 				})
 			},
