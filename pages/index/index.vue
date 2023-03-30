@@ -33,10 +33,12 @@
 		data() {
 			return {
 				navlist: [{
-						name: "最新"
+						name: "最新",
+						type:"publish_date"
 					},
 					{
-						name: "热门"
+						name: "热门",
+						type:"view_count"
 					}
 				],
 				//控制骨架屏的显示与隐藏
@@ -54,7 +56,7 @@
 			getDataList(){
 				let artTemp=db.collection("quanzi_article").field("title,user_id,description,picurls,comment_count,like_count,view_count,publish_date").getTemp();
 				let userTemp = db.collection("uni-id-users").field("_id,username,nickname,avatar_file").getTemp();
-				db.collection(artTemp,userTemp).get().then(res=>{
+				db.collection(artTemp,userTemp).orderBy(this.navlist[this.navAction].type ,"desc").get().then(res=>{
 					this.dataList = res.result.data;
 				})
 			},

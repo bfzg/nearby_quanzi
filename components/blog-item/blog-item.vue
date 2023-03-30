@@ -3,9 +3,9 @@
 		<view class="head">
 			<view class="userinfo">
 				<view class="avatar">
-					<image :src="item.user_id[0].avatar_file ? item.user_id[0].avatar_file.url : '../../static/images/user-default.jpg'"  mode="aspectFill"></image>
+					<image :src="giveAvatar(item)"  mode="aspectFill"></image>
 				</view>
-				<view class="name">{{item.user_id[0].nickname ? item.user_id[0].nickname : item.user_id[0].username}}</view>
+				<view class="name">{{giveName(item)}}</view>
 				<view class="time">
 					<uni-dateformat :date="item.publish_date" format="MM月dd hh:mm" :threshold="[60000,3600000*24*30]"></uni-dateformat>
 				</view>
@@ -18,10 +18,10 @@
 		
 		<view class="body" >
 			<view class="title" @click="goDetail">{{item.title}}</view>
-			<view class="text" @click="goDetail">
+			<view class="text" @click="goDetail" v-if="item.description">
 				<view class="t">{{item.description}}</view>
 			</view>
-			<view class="piclist">
+			<view class="piclist" v-if="item.picurls.length">
 				<view class="pic" v-for="(j,index) in item.picurls" :key="index">
 					<image @click="clickPic(index)" :src="j" mode="aspectFill"></image>
 				</view>					
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+	import {giveName,giveAvatar} from "@/utils/tools.js"
 	export default {
 		props:{
 			item:{
@@ -59,6 +60,8 @@
 			};
 		},
 		methods:{
+			giveName,
+			giveAvatar,
 			//点击查看图片
 			clickPic(index){
 				uni.previewImage({

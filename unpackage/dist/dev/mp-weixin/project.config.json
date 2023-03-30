@@ -19,7 +19,7 @@
     "condition": false
   },
   "compileType": "miniprogram",
-  "libVersion": "2.30.3",
+  "libVersion": "2.25.3",
   "appid": "touristappid",
   "projectname": "quanzi",
   "condition": {},

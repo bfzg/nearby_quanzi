@@ -9,12 +9,12 @@
 				<view class="userinfo">
 					<view class="avatar">
 						<image
-							:src="detailObj.user_id[0].avatar_file ? detailObj.user_id[0].avatar_file.url : '../../static/images/user-default.jpg'"
+							:src="giveAvatar(detailObj)"
 							mode="aspectFill"></image>
 					</view>
 					<view class="text">
 						<view class="name">
-							{{detailObj.user_id[0].nickname ? detailObj.user_id[0].nickname : detailObj.user_id[0].username}}
+							{{giveName(detailObj)}}
 						</view>
 						<view class="small"><text><uni-dateformat :date="detailObj.publish_date"
 									format="yyyy年MM月ddhh:mm"></uni-dateformat> &#8226; 发布于{{detailObj.province}}</text>
@@ -43,6 +43,9 @@
 </template>
 
 <script>
+	import pageJson from "@/pages.json"
+	import {store} from '@/uni_modules/uni-id-pages/common/store.js'
+	import {giveName,giveAvatar} from "@/utils/tools.js"
 	const db = uniCloud.database();
 	const utilsObj = uniCloud.importObject('UtilsObj',{
 		customUI:true
@@ -70,6 +73,7 @@
 			this.readUpdate();
 		},
 		methods: {
+			giveName,giveAvatar,
 			//错误处理
 			errFun() {
 				uni.showToast({
@@ -87,15 +91,19 @@
 				let artTemp = db.collection("quanzi_article").where(`_id=="${this.artid}"`).getTemp();
 				let userTemp = db.collection("uni-id-users").field("_id,username,nickname,avatar_file").getTemp();
 				let likeTemp = db.collection("quanzi_like").where(`article_id=="${this.artid}" && user_id==$cloudEnv_uid`).getTemp();
-				db.collection(artTemp, userTemp,likeTemp).get({
+				let tempArr=[artTemp,userTemp];
+				if(store.hasLogin) tempArr.push(likeTemp);
+				
+				db.collection(...tempArr).get({
 					getOne: true
 				}).then(res => {
 					if (!res.result.data) {
 						this.errFun();
 						return;
 					}
-					let isLike = res.result.data._id.quanzi_like.length ? true : false;
-					res.result.data.isLike = isLike;
+					let isLike =false;
+					if(store.hasLogin) isLike = res.result.data._id?.quanzi_like.length ? true :false;
+					res.result.data.isLike=isLike;
 					this.detailObj = res.result.data;
 					this.loadState = false;
 					console.log(this.detailObj);
@@ -109,6 +117,21 @@
 			},
 			//点赞操作
 			clickLike() {
+				//判断是否点赞
+				if(!store.hasLogin){
+					uni.showModal({
+						title:"是否登录!",
+						success:res=>{
+							if(res.confirm){
+								uni.navigateTo({
+									url:'/'+pageJson.uniIdRouter.loginPage
+								})
+							}
+						}
+					})
+					
+				}
+				
 				let time = Date.now();
 				if(time-this.likeTime<2000){
 					uni.showToast({

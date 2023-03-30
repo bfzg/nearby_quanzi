@@ -102,13 +102,13 @@ var components
 try {
   components = {
     uTabs: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-tabs/u-tabs */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-tabs/u-tabs")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-tabs/u-tabs.vue */ 334))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-tabs/u-tabs */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-tabs/u-tabs")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-tabs/u-tabs.vue */ 378))
     },
     uSkeleton: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-skeleton/u-skeleton */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-skeleton/u-skeleton")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-skeleton/u-skeleton.vue */ 342))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-skeleton/u-skeleton */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-skeleton/u-skeleton")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-skeleton/u-skeleton.vue */ 386))
     },
     blogItem: function () {
-      return __webpack_require__.e(/*! import() | components/blog-item/blog-item */ "components/blog-item/blog-item").then(__webpack_require__.bind(null, /*! @/components/blog-item/blog-item.vue */ 350))
+      return Promise.all(/*! import() | components/blog-item/blog-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/blog-item/blog-item")]).then(__webpack_require__.bind(null, /*! @/components/blog-item/blog-item.vue */ 394))
     },
   }
 } catch (e) {
@@ -206,9 +206,11 @@ var _default = {
   data: function data() {
     return {
       navlist: [{
-        name: "最新"
+        name: "最新",
+        type: "publish_date"
       }, {
-        name: "热门"
+        name: "热门",
+        type: "view_count"
       }],
       //控制骨架屏的显示与隐藏
       loadState: false,
@@ -226,7 +228,7 @@ var _default = {
       var _this = this;
       var artTemp = db.collection("quanzi_article").field("title,user_id,description,picurls,comment_count,like_count,view_count,publish_date").getTemp();
       var userTemp = db.collection("uni-id-users").field("_id,username,nickname,avatar_file").getTemp();
-      db.collection(artTemp, userTemp).get().then(function (res) {
+      db.collection(artTemp, userTemp).orderBy(this.navlist[this.navAction].type, "desc").get().then(function (res) {
         _this.dataList = res.result.data;
       });
     },

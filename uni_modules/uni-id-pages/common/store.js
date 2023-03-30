@@ -7,9 +7,13 @@ const usersTable = db.collection('uni-id-users')
 
 let hostUserInfo = uni.getStorageSync('uni-id-pages-userInfo')||{}
 // console.log( hostUserInfo);
+let tokenTime = uniCloud.getCurrentUserInfo().tokenExpired - Date.now();
+if(tokenTime <= 0){
+	hostUserInfo={}
+}
 const data = {
 	userInfo: hostUserInfo,
-	hasLogin: Object.keys(hostUserInfo).length != 0
+	hasLogin: Object.keys(hostUserInfo).length != 0 && tokenTime > 0
 }
 
 // console.log('data', data);
@@ -42,7 +46,7 @@ export const mutations = {
 			})
 			try {
 				let res = await usersTable.where("'_id' == $cloudEnv_uid")
-					.field('mobile,nickname,username,email,avatar_file')
+					.field('mobile,nickname,username,email,avatar_file,register_date')
 					.get()
 
 				const realNameRes = await uniIdCo.getRealNameInfo()
@@ -79,7 +83,7 @@ export const mutations = {
 		uni.removeStorageSync('uni_id_token');
 		uni.setStorageSync('uni_id_token_expired', 0)
 		uni.redirectTo({
-			url: `/${pagesJson.uniIdRouter?.loginPage ?? 'uni_modules/uni-id-pages/pages/login/login-withoutpwd'}`,
+			url: '/pages/self/self'
 		});
 		uni.$emit('uni-id-pages-logout')
 		this.setUserInfo({},{cover:true})

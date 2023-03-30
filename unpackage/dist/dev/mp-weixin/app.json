@@ -19,7 +19,13 @@
     "uni_modules/uni-id-pages/pages/userinfo/change_pwd/change_pwd",
     "uni_modules/uni-id-pages/pages/register/register-admin",
     "uni_modules/uni-id-pages/pages/userinfo/set-pwd/set-pwd",
-    "uni_modules/uni-id-pages/pages/userinfo/realname-verify/realname-verify"
+    "uni_modules/uni-id-pages/pages/userinfo/realname-verify/realname-verify",
+    "pages/quanzi_article/list",
+    "pages/quanzi_like/list",
+    "uni_modules/uni-feedback/pages/opendb-feedback/opendb-feedback",
+    "uni_modules/uni-feedback/pages/opendb-feedback/edit",
+    "uni_modules/uni-feedback/pages/opendb-feedback/list",
+    "uni_modules/uni-feedback/pages/opendb-feedback/detail"
   ],
   "subPackages": [],
   "window": {
