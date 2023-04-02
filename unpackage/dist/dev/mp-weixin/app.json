@@ -25,7 +25,8 @@
     "uni_modules/uni-feedback/pages/opendb-feedback/opendb-feedback",
     "uni_modules/uni-feedback/pages/opendb-feedback/edit",
     "uni_modules/uni-feedback/pages/opendb-feedback/list",
-    "uni_modules/uni-feedback/pages/opendb-feedback/detail"
+    "uni_modules/uni-feedback/pages/opendb-feedback/detail",
+    "pages/reply/reply"
   ],
   "subPackages": [],
   "window": {

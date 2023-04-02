@@ -3,6 +3,7 @@
   "usingComponents": {
     "u-tabs": "/uni_modules/uview-ui/components/u-tabs/u-tabs",
     "u-skeleton": "/uni_modules/uview-ui/components/u-skeleton/u-skeleton",
-    "blog-item": "/components/blog-item/blog-item"
+    "blog-item": "/components/blog-item/blog-item",
+    "uni-load-more": "/uni_modules/uni-load-more/components/uni-load-more/uni-load-more"
   }
 }

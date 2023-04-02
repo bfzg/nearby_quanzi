@@ -32,11 +32,12 @@
 
 		<view class="info">
 			<view class="box">
-				<text class="iconfont icon-a-27-liulan"></text> 
-				<text>{{item.view_count}}</text></view>
+				<text class="iconfont icon-a-27-liulan"></text>
+				<text>{{item.view_count}}</text>
+			</view>
 			<view class="box" @click="goDetail">
 				<text class="iconfont icon-a-5-xinxi"></text>
-				<text>{{item.comment_count ? item.comment_count :'评论'}}</text>
+				<text>{{item.comment_count && item.comment_count>0 ? item.comment_count :'评论'}}</text>
 			</view>
 			<view class="box" :class="item.isLike ? 'active': ''" @click="clickLike">
 				<text class="iconfont icon-a-106-xihuan"></text>
@@ -46,15 +47,24 @@
 
 
 		<!-- 弹出框 -->
-		<u-action-sheet @select="sheetSelect" @close="sheetClose" :closeOnClickOverlay="true" :closeOnClickAction="true"  :actions="list" round:20 cancelText="取消" :show="sheetShow"></u-action-sheet>
+		<u-action-sheet @select="sheetSelect" @close="sheetClose" :closeOnClickOverlay="true" :closeOnClickAction="true"
+			:actions="list" round:20 cancelText="取消" :show="sheetShow"></u-action-sheet>
 	</view>
 </template>
 
 <script>
+	import pageJson from "@/pages.json"
 	import {
 		giveName,
 		giveAvatar
 	} from "@/utils/tools.js"
+	import {
+		store
+	} from "../../uni_modules/uni-id-pages/common/store";
+	import {
+		likeFun
+	} from '@/utils/clilkeLike.js';
+import { type } from "os";
 	const db = uniCloud.database();
 	export default {
 		props: {
@@ -65,24 +75,26 @@
 
 					}
 				}
-			}
+			},
+			isLike:Boolean,
+			like_count:Number
 		},
 		data() {
 			return {
 				picArr: [1],
 				list: [{
 						name: "修改",
-						type:'edit',
-						disabled:true
+						type: 'edit',
+						disabled: true
 					},
 					{
 						name: "删除",
-						type:'delete',
-						color:"#f56c6c",
-						disabled:true
+						type: 'delete',
+						color: "#f56c6c",
+						disabled: true
 					}
 				],
-				sheetShow:false      //控制弹出框的显示于隐藏
+				sheetShow: false //控制弹出框的显示于隐藏
 			};
 		},
 		methods: {
@@ -102,53 +114,82 @@
 				})
 			},
 			//选择弹出点击弹出列表中的一个选项
-			sheetSelect(e){
-				this.sheetShow=false;
-				let type= e.type;
-				if(type == "delete"){
+			sheetSelect(e) {
+				this.sheetShow = false;
+				let type = e.type;
+				if (type == "delete") {
 					this.delFun();
 				}
 			},
 			//删除操作
-			delFun(){
+			delFun() {
 				uni.showLoading({
-					title:'删除中...'
+					title: '删除中...'
 				})
 				db.collection("quanzi_article").doc(this.item._id).update({
-					delState:true
-				}).then(res=>{
+					delState: true
+				}).then(res => {
 					uni.hideLoading();
 					uni.showToast({
-						title:'删除成功!',
-						icon:'none'
+						title: '删除成功!',
+						icon: 'none'
 					})
-					this.$emit("delEvent",true);
-				}).catch(err=>{
+					this.$emit("delEvent", true);
+				}).catch(err => {
 					uni.hideLoading();
 					uni.showToast({
-						title:'删除失败!',
-						icon:'none'
+						title: '删除失败!',
+						icon: 'none'
 					})
 				})
 			},
 			//点击弹出列表的取消按钮
-			sheetClose(){
-				this.sheetShow=false;
+			sheetClose() {
+				this.sheetShow = false;
 			},
 			//点击更多
-			clickMore(){
+			clickMore() {
 				let uid = uniCloud.getCurrentUserInfo().uid;
-				if(uid== this.item.user_id[0]._id || this.uniIDHasRole('admin')){
-					this.list.forEach(item=>{
+				if (uid == this.item.user_id[0]._id || this.uniIDHasRole('admin')) {
+					this.list.forEach(item => {
 						item.disabled = false;
 					})
 				}
 				this.sheetShow = true;
 			},
 			// 点赞功能
-			clickLike(){
-				console.log('1111');
-			}
+			clickLike() {
+				if (!store.hasLogin) {
+					uni.showModal({
+						title: "是否登录!",
+						success: res => {
+							if (res.confirm) {
+								uni.navigateTo({
+									url: '/' + pageJson.uniIdRouter.loginPage
+								})
+							}
+						}
+					})
+				}
+				let time = Date.now();
+				if (time - this.likeTime < 2000) {
+					uni.showToast({
+						title: "操作太频繁!",
+						icon: 'none'
+					})
+					return;
+				}
+				this.likeTime = time;
+			
+				let like_count=this.item.like_count;
+				let isLike = !this.item.isLike;
+				this.item.isLike ? like_count-- : like_count++
+				this.$emit("update:isLike",isLike);
+				this.$emit("update:like_count",like_count);
+				
+				likeFun(this.item._id);
+			},
+
 		}
 	}
 </script>
@@ -285,9 +326,10 @@
 					font-size: 40rpx;
 					padding-right: 10rpx;
 				}
-				
+
 			}
-			.active{
+
+			.active {
 				color: #79e2ef;
 			}
 		}

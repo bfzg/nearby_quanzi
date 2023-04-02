@@ -107,4 +107,11 @@
 .active {
   background: #0199FE !important;
 }
+.comment {
+  padding: 30rpx;
+  padding-bottom: 120rpx;
+}
+.comment .item {
+  padding: 10rpx 0;
+}
 

@@ -38,9 +38,9 @@
 
 		<view class="main">
 			<view class="info">
-				<view class="item"><text>33</text>获赞</view>
+				<view class="item"><text>{{totalObj.likeNum}}</text>获赞</view>
 				<view class="item"><text>11</text>评论</view>
-				<view class="item"><text>5</text>发文</view>
+				<view class="item"><text>{{totalObj.artNum}}</text>发文</view>
 			</view>
 
 			<view class="list">
@@ -105,11 +105,18 @@
 		store,
 		mutations
 	} from '@/uni_modules/uni-id-pages/common/store.js'
+	const db = uniCloud.database();
 	export default {
 		data() {
 			return {
-
+				totalObj:{
+					artNum:0,
+					likeNum:0
+				}
 			};
+		},
+		onLoad() {
+			this.getTotal();
 		},
 		computed: {
 			//判断是否登录
@@ -122,6 +129,14 @@
 			}
 		},
 		methods: {
+			//获取我的发布评论的信息
+			async getTotal(){
+				let artCount = await db.collection("quanzi_article").where(`user_id==$cloudEnv_uid`).count();
+				this.totalObj.artNum=artCount.result.total;
+				
+				let likeCount = await db.collection("quanzi_article").where(`user_id==$cloudEnv_uid`).groupBy('user_id').groupField('sum(like_count) as totalScore').get();
+				this.totalObj.likeNum = likeCount.result.data[0].totalScore;
+			},
 			//点击调换到登录页
 			goToLogin() {
 				uni.navigateTo({

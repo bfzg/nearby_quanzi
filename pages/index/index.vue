@@ -17,10 +17,12 @@
 
 		<view class="content">
 			<view class="item" v-for="item in dataList" :key="item._id">
-				<blog-item @delEvent="P_delEvent" :item="item"></blog-item>
+				<blog-item :like_count.sync="item.like_count" :isLike.sync="item.isLike" @delEvent="P_delEvent" :item="item"></blog-item>
 			</view>
 		</view>
-
+		<view class="">
+			<uni-load-more :status="uniload"></uni-load-more>
+		</view>
 		<view class="edit" @click="goEdit">
 			<text class="iconfont icon-a-21-xiugai"></text>
 		</view>
@@ -52,9 +54,17 @@
 				//点击切换最新和热门
 				navAction: 0,
 				dataList: [],
+				uniload:'more',
+				noMore:false
 			}
 		},
 		onLoad() {
+			this.getDataList();
+		},
+		//触底事件
+		onReachBottom() {
+			this.uniload = 'loading';
+			if(this.noMore) return;
 			this.getDataList();
 		},
 		methods: {
@@ -63,9 +73,14 @@
 				let artTemp = db.collection("quanzi_article").where(`delState != true`).field(
 					"title,user_id,description,picurls,comment_count,like_count,view_count,publish_date").getTemp();
 				let userTemp = db.collection("uni-id-users").field("_id,username,nickname,avatar_file").getTemp();
-				db.collection(artTemp, userTemp).orderBy(this.navlist[this.navAction].type, "desc").get().then(
+				db.collection(artTemp, userTemp).orderBy(this.navlist[this.navAction].type, "desc").skip(this.dataList.length).limit(5).get().then(
 			async res => {
-					let resDataArr = res.result.data;
+					if(res.result.data.length == 0){
+						this.uniload='noMore';
+						this.noMore=true;
+					}
+					let oldDataArr = this.dataList;
+					let resDataArr = [...oldDataArr,...res.result.data];
 					//在首页显示是否点过赞的逻辑
 					if (store.hasLogin) {
 						let idArr = [];
@@ -97,6 +112,7 @@
 				this.dataList = [];
 				this.navAction = e.index;
 				this.getDataList();
+				this.uniload='more';	
 			},
 			//跳转到发布页
 			goEdit() {
@@ -105,7 +121,6 @@
 				})
 			},
 			P_delEvent() {
-				console.log(111111);
 				this.dataList = [];
 				this.getDataList();
 			}

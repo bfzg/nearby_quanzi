@@ -102,13 +102,16 @@ var components
 try {
   components = {
     uTabs: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-tabs/u-tabs */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-tabs/u-tabs")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-tabs/u-tabs.vue */ 378))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-tabs/u-tabs */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-tabs/u-tabs")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-tabs/u-tabs.vue */ 387))
     },
     uSkeleton: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-skeleton/u-skeleton */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-skeleton/u-skeleton")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-skeleton/u-skeleton.vue */ 386))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-skeleton/u-skeleton */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-skeleton/u-skeleton")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-skeleton/u-skeleton.vue */ 395))
     },
     blogItem: function () {
-      return Promise.all(/*! import() | components/blog-item/blog-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/blog-item/blog-item")]).then(__webpack_require__.bind(null, /*! @/components/blog-item/blog-item.vue */ 394))
+      return Promise.all(/*! import() | components/blog-item/blog-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/blog-item/blog-item")]).then(__webpack_require__.bind(null, /*! @/components/blog-item/blog-item.vue */ 403))
+    },
+    uniLoadMore: function () {
+      return Promise.all(/*! import() | uni_modules/uni-load-more/components/uni-load-more/uni-load-more */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-load-more/components/uni-load-more/uni-load-more")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-load-more/components/uni-load-more/uni-load-more.vue */ 411))
     },
   }
 } catch (e) {
@@ -173,8 +176,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
+var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 30));
 var _store = __webpack_require__(/*! @/uni_modules/uni-id-pages/common/store.js */ 173);
+//
+//
 //
 //
 //
@@ -221,10 +227,18 @@ var _default = {
       loadState: true,
       //点击切换最新和热门
       navAction: 0,
-      dataList: []
+      dataList: [],
+      uniload: 'more',
+      noMore: false
     };
   },
   onLoad: function onLoad() {
+    this.getDataList();
+  },
+  //触底事件
+  onReachBottom: function onReachBottom() {
+    this.uniload = 'loading';
+    if (this.noMore) return;
     this.getDataList();
   },
   methods: {
@@ -233,28 +247,33 @@ var _default = {
       var _this = this;
       var artTemp = db.collection("quanzi_article").where("delState != true").field("title,user_id,description,picurls,comment_count,like_count,view_count,publish_date").getTemp();
       var userTemp = db.collection("uni-id-users").field("_id,username,nickname,avatar_file").getTemp();
-      db.collection(artTemp, userTemp).orderBy(this.navlist[this.navAction].type, "desc").get().then( /*#__PURE__*/function () {
+      db.collection(artTemp, userTemp).orderBy(this.navlist[this.navAction].type, "desc").skip(this.dataList.length).limit(5).get().then( /*#__PURE__*/function () {
         var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(res) {
-          var resDataArr, idArr, likeRes;
+          var oldDataArr, resDataArr, idArr, likeRes;
           return _regenerator.default.wrap(function _callee$(_context) {
             while (1) {
               switch (_context.prev = _context.next) {
                 case 0:
-                  resDataArr = res.result.data; //在首页显示是否点过赞的逻辑
+                  if (res.result.data.length == 0) {
+                    _this.uniload = 'noMore';
+                    _this.noMore = true;
+                  }
+                  oldDataArr = _this.dataList;
+                  resDataArr = [].concat((0, _toConsumableArray2.default)(oldDataArr), (0, _toConsumableArray2.default)(res.result.data)); //在首页显示是否点过赞的逻辑
                   if (!_store.store.hasLogin) {
-                    _context.next = 8;
+                    _context.next = 10;
                     break;
                   }
                   idArr = [];
                   resDataArr.forEach(function (item) {
                     idArr.push(item._id);
                   });
-                  _context.next = 6;
+                  _context.next = 8;
                   return db.collection("quanzi_like").where({
                     article_id: dbCmd.in(idArr),
                     user_id: uniCloud.getCurrentUserInfo()._id
                   }).get();
-                case 6:
+                case 8:
                   likeRes = _context.sent;
                   likeRes.result.data.forEach(function (item) {
                     var findIndex = resDataArr.findIndex(function (find) {
@@ -262,10 +281,10 @@ var _default = {
                     });
                     resDataArr[findIndex].isLike = true;
                   });
-                case 8:
+                case 10:
                   _this.dataList = resDataArr;
                   _this.loadState = false;
-                case 10:
+                case 12:
                 case "end":
                   return _context.stop();
               }
@@ -283,6 +302,7 @@ var _default = {
       this.dataList = [];
       this.navAction = e.index;
       this.getDataList();
+      this.uniload = 'more';
     },
     //跳转到发布页
     goEdit: function goEdit() {
@@ -291,7 +311,6 @@ var _default = {
       });
     },
     P_delEvent: function P_delEvent() {
-      console.log(111111);
       this.dataList = [];
       this.getDataList();
     }
