@@ -129,4 +129,7 @@
   font-size: 40rpx;
   padding-right: 10rpx;
 }
+.blogitem .info .active {
+  color: #79e2ef;
+}
 

@@ -19,7 +19,9 @@
 				<button type="primary" class="uni-button" @click="submit">提交</button>
 			</view>
 		</uni-forms>
-		 <uni-fab ref="fab" horizontal="right" vertical="bottom" :pop-menu="false" @fabClick="fabClick" />
+		<view v-if="uniIDHasRole('admin')">
+			<uni-fab ref="fab" horizontal="right" vertical="bottom" :pop-menu="false" @fabClick="fabClick" />
+		</view>
 	</view>
 </template>
 
@@ -94,9 +96,9 @@
 				})
 			},
 			//跳转到列表
-			fabClick(){
+			fabClick() {
 				uni.navigateTo({
-					url:"/uni_modules/uni-feedback/pages/opendb-feedback/list"
+					url: "/uni_modules/uni-feedback/pages/opendb-feedback/list"
 				})
 			}
 		}

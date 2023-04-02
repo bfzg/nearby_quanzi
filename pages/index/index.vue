@@ -11,13 +11,13 @@
 			}" @click="clickNav"></u-tabs>
 		</view>
 
-		<view class="loadingState" v-show="loadState">
+		<view class="loadingState" v-if="loadState">
 			<u-skeleton rows="4" title loading></u-skeleton>
 		</view>
 
 		<view class="content">
 			<view class="item" v-for="item in dataList" :key="item._id">
-				<blog-item :item="item"></blog-item>
+				<blog-item @delEvent="P_delEvent" :item="item"></blog-item>
 			</view>
 		</view>
 
@@ -28,21 +28,27 @@
 </template>
 
 <script>
+	import {
+		store,
+		mutations
+	} from '@/uni_modules/uni-id-pages/common/store.js'
 	const db = uniCloud.database();
+	const dbCmd = db.command;
+
 	export default {
 		data() {
 			return {
 				navlist: [{
 						name: "最新",
-						type:"publish_date"
+						type: "publish_date"
 					},
 					{
 						name: "热门",
-						type:"view_count"
+						type: "view_count"
 					}
 				],
 				//控制骨架屏的显示与隐藏
-				loadState: false,
+				loadState: true,
 				//点击切换最新和热门
 				navAction: 0,
 				dataList: [],
@@ -53,11 +59,36 @@
 		},
 		methods: {
 			//获取数据
-			getDataList(){
-				let artTemp=db.collection("quanzi_article").field("title,user_id,description,picurls,comment_count,like_count,view_count,publish_date").getTemp();
+			getDataList() {
+				let artTemp = db.collection("quanzi_article").where(`delState != true`).field(
+					"title,user_id,description,picurls,comment_count,like_count,view_count,publish_date").getTemp();
 				let userTemp = db.collection("uni-id-users").field("_id,username,nickname,avatar_file").getTemp();
-				db.collection(artTemp,userTemp).orderBy(this.navlist[this.navAction].type ,"desc").get().then(res=>{
-					this.dataList = res.result.data;
+				db.collection(artTemp, userTemp).orderBy(this.navlist[this.navAction].type, "desc").get().then(
+			async res => {
+					let resDataArr = res.result.data;
+					//在首页显示是否点过赞的逻辑
+					if (store.hasLogin) {
+						let idArr = [];
+
+						resDataArr.forEach(item => {
+							idArr.push(item._id);
+						})
+
+						let likeRes = await db.collection("quanzi_like").where({
+							article_id: dbCmd.in(idArr),
+							user_id: uniCloud.getCurrentUserInfo()._id
+						}).get();
+
+						likeRes.result.data.forEach(item => {
+							let findIndex = resDataArr.findIndex(find => {
+								return item.article_id = find._id
+							})
+							resDataArr[findIndex].isLike = true;
+						})
+					}
+
+					this.dataList = resDataArr;
+					this.loadState = false;
 				})
 			},
 			//点击切换热门 最新
@@ -73,6 +104,11 @@
 					url: "/pages/edit/edit"
 				})
 			},
+			P_delEvent() {
+				console.log(111111);
+				this.dataList = [];
+				this.getDataList();
+			}
 		}
 	}
 </script>

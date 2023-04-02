@@ -1,6 +1,7 @@
 {
   "component": true,
   "usingComponents": {
-    "uni-dateformat": "/uni_modules/uni-dateformat/components/uni-dateformat/uni-dateformat"
+    "uni-dateformat": "/uni_modules/uni-dateformat/components/uni-dateformat/uni-dateformat",
+    "u-action-sheet": "/uni_modules/uview-ui/components/u-action-sheet/u-action-sheet"
   }
 }

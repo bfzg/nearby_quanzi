@@ -194,8 +194,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _validator = _interopRequireDefault(__webpack_require__(/*! ./validator.js */ 266));
 var _loginPageMixin = _interopRequireDefault(__webpack_require__(/*! @/uni_modules/uni-id-pages/common/login-page.mixin.js */ 241));
-var _config = _interopRequireDefault(__webpack_require__(/*! @/uni_modules/uni-id-pages/config.js */ 182));
-var _store = __webpack_require__(/*! @/uni_modules/uni-id-pages/common/store.js */ 181);
+var _config = _interopRequireDefault(__webpack_require__(/*! @/uni_modules/uni-id-pages/config.js */ 174));
+var _store = __webpack_require__(/*! @/uni_modules/uni-id-pages/common/store.js */ 173);
 //
 //
 //

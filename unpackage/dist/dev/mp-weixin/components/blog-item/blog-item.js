@@ -82,6 +82,9 @@ try {
     uniDateformat: function () {
       return Promise.all(/*! import() | uni_modules/uni-dateformat/components/uni-dateformat/uni-dateformat */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-dateformat/components/uni-dateformat/uni-dateformat")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-dateformat/components/uni-dateformat/uni-dateformat.vue */ 401))
     },
+    uActionSheet: function () {
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-action-sheet/u-action-sheet */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-action-sheet/u-action-sheet")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-action-sheet/u-action-sheet.vue */ 599))
+    },
   }
 } catch (e) {
   if (
@@ -150,7 +153,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
+/* WEBPACK VAR INJECTION */(function(uniCloud, uni) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -200,6 +203,17 @@ var _tools = __webpack_require__(/*! @/utils/tools.js */ 183);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var db = uniCloud.database();
 var _default2 = {
   props: {
     item: {
@@ -211,9 +225,21 @@ var _default2 = {
   },
   data: function data() {
     return {
-      picArr: [1]
+      picArr: [1],
+      list: [{
+        name: "修改",
+        type: 'edit',
+        disabled: true
+      }, {
+        name: "删除",
+        type: 'delete',
+        color: "#f56c6c",
+        disabled: true
+      }],
+      sheetShow: false //控制弹出框的显示于隐藏
     };
   },
+
   methods: {
     giveName: _tools.giveName,
     giveAvatar: _tools.giveAvatar,
@@ -229,11 +255,60 @@ var _default2 = {
       uni.navigateTo({
         url: "/pages/detail/detail?id=" + this.item._id
       });
+    },
+    //选择弹出点击弹出列表中的一个选项
+    sheetSelect: function sheetSelect(e) {
+      this.sheetShow = false;
+      var type = e.type;
+      if (type == "delete") {
+        this.delFun();
+      }
+    },
+    //删除操作
+    delFun: function delFun() {
+      var _this = this;
+      uni.showLoading({
+        title: '删除中...'
+      });
+      db.collection("quanzi_article").doc(this.item._id).update({
+        delState: true
+      }).then(function (res) {
+        uni.hideLoading();
+        uni.showToast({
+          title: '删除成功!',
+          icon: 'none'
+        });
+        _this.$emit("delEvent", true);
+      }).catch(function (err) {
+        uni.hideLoading();
+        uni.showToast({
+          title: '删除失败!',
+          icon: 'none'
+        });
+      });
+    },
+    //点击弹出列表的取消按钮
+    sheetClose: function sheetClose() {
+      this.sheetShow = false;
+    },
+    //点击更多
+    clickMore: function clickMore() {
+      var uid = uniCloud.getCurrentUserInfo().uid;
+      if (uid == this.item.user_id[0]._id || this.uniIDHasRole('admin')) {
+        this.list.forEach(function (item) {
+          item.disabled = false;
+        });
+      }
+      this.sheetShow = true;
+    },
+    // 点赞功能
+    clickLike: function clickLike() {
+      console.log('1111');
     }
   }
 };
 exports.default = _default2;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js */ 27)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
 

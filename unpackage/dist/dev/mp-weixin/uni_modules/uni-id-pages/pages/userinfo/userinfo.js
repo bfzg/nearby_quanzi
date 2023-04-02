@@ -183,7 +183,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 30));
-var _store = __webpack_require__(/*! @/uni_modules/uni-id-pages/common/store.js */ 181);
+var _store = __webpack_require__(/*! @/uni_modules/uni-id-pages/common/store.js */ 173);
 //
 //
 //

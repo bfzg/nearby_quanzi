@@ -187,8 +187,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _password = _interopRequireDefault(__webpack_require__(/*! @/uni_modules/uni-id-pages/common/password.js */ 267));
-var _store = __webpack_require__(/*! @/uni_modules/uni-id-pages/common/store.js */ 181);
-var _config = _interopRequireDefault(__webpack_require__(/*! @/uni_modules/uni-id-pages/config.js */ 182));
+var _store = __webpack_require__(/*! @/uni_modules/uni-id-pages/common/store.js */ 173);
+var _config = _interopRequireDefault(__webpack_require__(/*! @/uni_modules/uni-id-pages/config.js */ 174));
 //
 //
 //

@@ -138,6 +138,15 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var m0 = _vm.uniIDHasRole("admin")
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        m0: m0,
+      },
+    }
+  )
 }
 var recyclableRender = false
 var staticRenderFns = []

@@ -176,7 +176,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _store = __webpack_require__(/*! @/uni_modules/uni-id-pages/common/store.js */ 181);
+var _store = __webpack_require__(/*! @/uni_modules/uni-id-pages/common/store.js */ 173);
 //
 //
 //
