@@ -9944,8 +9944,7 @@ var k = "development" === "development",
     "address": [
         "127.0.0.1",
         "169.254.155.214",
-        "192.168.137.1",
-        "192.168.94.30"
+        "192.168.211.23"
     ],
     "debugPort": 9000,
     "initialLaunchType": "local",

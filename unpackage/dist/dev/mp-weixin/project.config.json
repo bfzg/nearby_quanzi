@@ -8,7 +8,7 @@
     "urlCheck": false,
     "es6": false,
     "postcss": false,
-    "minified": false,
+    "minified": true,
     "newFeature": true,
     "bigPackageSizeSupport": true,
     "babelSetting": {
@@ -21,7 +21,7 @@
   "compileType": "miniprogram",
   "libVersion": "2.25.3",
   "appid": "touristappid",
-  "projectname": "quanzi",
+  "projectname": "元",
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",

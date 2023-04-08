@@ -210,6 +210,7 @@ var _store = __webpack_require__(/*! @/uni_modules/uni-id-pages/common/store.js 
 //
 //
 //
+//
 
 var db = uniCloud.database();
 var dbCmd = db.command;
@@ -249,11 +250,12 @@ var _default = {
       var userTemp = db.collection("uni-id-users").field("_id,username,nickname,avatar_file").getTemp();
       db.collection(artTemp, userTemp).orderBy(this.navlist[this.navAction].type, "desc").skip(this.dataList.length).limit(5).get().then( /*#__PURE__*/function () {
         var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(res) {
-          var oldDataArr, resDataArr, idArr, likeRes;
+          var idArr, oldDataArr, resDataArr, likeRes;
           return _regenerator.default.wrap(function _callee$(_context) {
             while (1) {
               switch (_context.prev = _context.next) {
                 case 0:
+                  idArr = [];
                   if (res.result.data.length == 0) {
                     _this.uniload = 'noMore';
                     _this.noMore = true;
@@ -261,30 +263,30 @@ var _default = {
                   oldDataArr = _this.dataList;
                   resDataArr = [].concat((0, _toConsumableArray2.default)(oldDataArr), (0, _toConsumableArray2.default)(res.result.data)); //在首页显示是否点过赞的逻辑
                   if (!_store.store.hasLogin) {
-                    _context.next = 10;
+                    _context.next = 11;
                     break;
                   }
-                  idArr = [];
                   resDataArr.forEach(function (item) {
                     idArr.push(item._id);
                   });
                   _context.next = 8;
                   return db.collection("quanzi_like").where({
                     article_id: dbCmd.in(idArr),
-                    user_id: uniCloud.getCurrentUserInfo()._id
+                    user_id: uniCloud.getCurrentUserInfo().uid
                   }).get();
                 case 8:
                   likeRes = _context.sent;
+                  console.log(likeRes);
                   likeRes.result.data.forEach(function (item) {
                     var findIndex = resDataArr.findIndex(function (find) {
                       return item.article_id = find._id;
                     });
                     resDataArr[findIndex].isLike = true;
                   });
-                case 10:
+                case 11:
                   _this.dataList = resDataArr;
                   _this.loadState = false;
-                case 12:
+                case 13:
                 case "end":
                   return _context.stop();
               }

@@ -16,8 +16,9 @@
 		</view>
 
 		<view class="content">
-			<view class="item" v-for="item in dataList" :key="item._id">
-				<blog-item :like_count.sync="item.like_count" :isLike.sync="item.isLike" @delEvent="P_delEvent" :item="item"></blog-item>
+			<view class="item" v-for="item in dataList">
+				<blog-item :like_count.sync="item.like_count" :isLike.sync="item.isLike" @delEvent="P_delEvent"
+					:item="item"></blog-item>
 			</view>
 		</view>
 		<view class="">
@@ -54,8 +55,8 @@
 				//点击切换最新和热门
 				navAction: 0,
 				dataList: [],
-				uniload:'more',
-				noMore:false
+				uniload: 'more',
+				noMore: false
 			}
 		},
 		onLoad() {
@@ -64,7 +65,7 @@
 		//触底事件
 		onReachBottom() {
 			this.uniload = 'loading';
-			if(this.noMore) return;
+			if (this.noMore) return;
 			this.getDataList();
 		},
 		methods: {
@@ -73,38 +74,38 @@
 				let artTemp = db.collection("quanzi_article").where(`delState != true`).field(
 					"title,user_id,description,picurls,comment_count,like_count,view_count,publish_date").getTemp();
 				let userTemp = db.collection("uni-id-users").field("_id,username,nickname,avatar_file").getTemp();
-				db.collection(artTemp, userTemp).orderBy(this.navlist[this.navAction].type, "desc").skip(this.dataList.length).limit(5).get().then(
-			async res => {
-					if(res.result.data.length == 0){
-						this.uniload='noMore';
-						this.noMore=true;
-					}
-					let oldDataArr = this.dataList;
-					let resDataArr = [...oldDataArr,...res.result.data];
-					//在首页显示是否点过赞的逻辑
-					if (store.hasLogin) {
+				db.collection(artTemp, userTemp).orderBy(this.navlist[this.navAction].type, "desc").skip(this.dataList
+					.length).limit(5).get().then(
+					async res => {
 						let idArr = [];
-
-						resDataArr.forEach(item => {
-							idArr.push(item._id);
-						})
-
-						let likeRes = await db.collection("quanzi_like").where({
-							article_id: dbCmd.in(idArr),
-							user_id: uniCloud.getCurrentUserInfo()._id
-						}).get();
-
-						likeRes.result.data.forEach(item => {
-							let findIndex = resDataArr.findIndex(find => {
-								return item.article_id = find._id
+						if (res.result.data.length == 0) {
+							this.uniload = 'noMore';
+							this.noMore = true;
+						}
+						let oldDataArr = this.dataList;
+						let resDataArr = [...oldDataArr, ...res.result.data];
+						//在首页显示是否点过赞的逻辑
+						if (store.hasLogin) {
+							resDataArr.forEach(item => {
+								idArr.push(item._id);
 							})
-							resDataArr[findIndex].isLike = true;
-						})
-					}
+							console.log(idArr);
+							let likeRes = await db.collection("quanzi_like").where({
+								article_id: dbCmd.in(idArr),
+								user_id: uniCloud.getCurrentUserInfo().uid
+							}).get();
+							likeRes.result.data.forEach(item => {
+								let findIndex = resDataArr.findIndex(find => {
+									return item.article_id == find._id
+								})
+								console.log(findIndex);
+								resDataArr[findIndex].isLike = true;
+							})
+						}
 
-					this.dataList = resDataArr;
-					this.loadState = false;
-				})
+						this.dataList = resDataArr;
+						this.loadState = false;
+					})
 			},
 			//点击切换热门 最新
 			clickNav(e) {
@@ -112,7 +113,7 @@
 				this.dataList = [];
 				this.navAction = e.index;
 				this.getDataList();
-				this.uniload='more';	
+				this.uniload = 'more';
 			},
 			//跳转到发布页
 			goEdit() {
